@@ -69,4 +69,41 @@ for index, category in X.items():
     X_new.append([index, category])
 ohe = OneHotEncoder(categories='auto')
 df_survey['Student'] = ohe.fit_transform(X_new)
-print (df_survey)
+#print (df_survey)
+df_survey_clr = df_survey[['YearsCode','Age1stCode','Age']]
+#df_survey_clr.isna().sum()
+#df_survey_clr.corr()
+Q1 = df_survey_clr.quantile(0.25)
+Q3 = df_survey_clr.quantile(0.75)
+IQR = Q3 - Q1
+df_survey_clr_q = df_survey_clr[~((df_survey_clr < (Q1 - 1.5 * IQR)) | (df_survey_clr > (Q3 + 1.5 * IQR))).any(axis=1)]
+df_survey_clr_sd = df_survey_clr[np.abs(df_survey_clr - df_survey_clr.mean()) <= 3*df_survey_clr.std()]
+df_survey_clr_sd.isna().sum()
+df_survey_clr_sd = df_survey_clr_sd.dropna()
+#print(df_survey_clr.corr())
+#print(df_survey_clr_sd.corr())
+print(df_survey_clr_sd.YearsCode.mean())
+print(df_survey_clr_sd.YearsCode.max())
+print(df_survey_clr_sd.YearsCode.min())
+print(df_survey_clr_sd.YearsCode.sum())
+print(df_survey_clr.YearsCode.mean())
+print(df_survey_clr.YearsCode.max())
+print(df_survey_clr.YearsCode.min())
+print(df_survey_clr.YearsCode.sum())
+df_survey_clr_m = df_survey_clr[df_survey_clr.YearsCode < 40]
+x = df_survey_clr['YearsCode']
+plt.hist(x, bins=100)
+plt.show();
+print(df_survey_clr[df_survey_clr.YearsCode > 40].describe())
+print(df_survey_clr.describe())
+sns.boxplot(y='YearsCode', data=df_survey_clr)
+plt.show();
+sns.boxplot(y='YearsCode', data=df_survey_clr_q)
+plt.show();
+sns.boxplot(y='YearsCode', data=df_survey_clr_sd)
+plt.show();
+sns.boxplot(y='YearsCode', data=df_survey_clr_m)
+plt.show();
+df_survey_clr_row = df_survey_clr[df_survey_clr.YearsCode > 40].index
+df_survey_clr_fin = df_survey_clr.drop(df_survey_clr_row, axis=0)
+print(df_survey_clr_fin.describe())
