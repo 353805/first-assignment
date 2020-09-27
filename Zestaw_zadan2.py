@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn import linear_model
 from scipy import stats
+import math
 from sklearn.preprocessing import OneHotEncoder
 df_schema = pd.read_csv('survey_results_schema.csv')
 df_survey = pd.read_csv('survey_results_public.csv',
@@ -44,3 +45,28 @@ print (df_survey.describe())
 #x1 = Age
 #x2 = Age1stCode
 #y = YearsCode
+df_survey ['CodeRev'] = pd.read_csv('survey_results_public.csv',
+                        usecols=['CodeRev'])
+#column_values3 = df_survey[['CodeRev']].values.ravel()
+#unique_values3 = pd.unique(column_values3)
+df_survey.replace(to_replace='Yes, because I see value in code review', value='Yes', inplace=True)
+df_survey.replace(to_replace='Yes, because I was told to do so', value='Yes', inplace=True)
+CodeRev = df_survey['CodeRev']
+for index, category in CodeRev.items():
+    if (not isinstance(category, str) and math.isnan(category)):
+        CodeRev[index] = 0
+df_survey.replace(to_replace='Yes', value='1', inplace=True)
+df_survey.replace(to_replace='No', value='0', inplace=True)
+df_survey ['Student'] = pd.read_csv('survey_results_public.csv',
+                        usecols=['Student'])
+#column_values4 = df_survey[['Student']].values.ravel()
+#unique_values4 = pd.unique(column_values4)
+X = df_survey['Student']
+X_new = []
+for index, category in X.items():
+    if (not isinstance(category, str) and math.isnan(category)):
+        category = 'No answer'
+    X_new.append([index, category])
+ohe = OneHotEncoder(categories='auto')
+df_survey['Student'] = ohe.fit_transform(X_new)
+print (df_survey)
