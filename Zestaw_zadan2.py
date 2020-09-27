@@ -13,7 +13,6 @@ df_survey.head(20)
 df_survey.shape
 df_survey.dropna(inplace=True)
 df_survey.shape
-df_survey.dtypes
 df_survey['CodeRevHrs'] = df_survey['CodeRevHrs'].astype('int64')
 df_survey.info()
 df_survey.replace(to_replace='Younger than 5 years', value='4', inplace=True)
@@ -26,3 +25,22 @@ unique_values = pd.unique(column_values)
 column_values2 = df_survey[['CodeRevHrs']].values.ravel()
 unique_values2 = pd.unique(column_values2)
 df_survey = df_survey.astype('int64', copy=False)
+df_survey.info()
+plt.plot(df_survey['Age'], df_survey['YearsCode'], 'ro', markersize=0.3)
+plt.xlabel('Age')
+plt.ylabel('WorkWeekHrs')
+plt.plot(df_survey['CodeRevHrs'], df_survey['Age1stCode'], 'ro', markersize=0.3)
+plt.xlabel('CodeRevHrs')
+plt.ylabel('Age1stCode')
+plt.plot(df_survey['Age'], df_survey['Age1stCode'], 'ro', markersize=0.3)
+plt.xlabel('Age')
+plt.ylabel('Age1stCode')
+plt.plot(df_survey['CodeRevHrs'], df_survey['WorkWeekHrs'], 'ro', markersize=0.3)
+plt.xlabel('CodeRevHrs')
+plt.ylabel('WorkWeekHrs')
+plt.show()
+print (df_survey.corr())
+print (df_survey.describe())
+#x1 = Age
+#x2 = Age1stCode
+#y = YearsCode
