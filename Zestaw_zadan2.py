@@ -55,6 +55,7 @@ CodeRev = df_survey['CodeRev']
 for index, category in CodeRev.items():
     if (not isinstance(category, str) and math.isnan(category)):
         CodeRev[index] = 0
+df_survey['CodeRev'] = CodeRev
 df_survey.replace(to_replace='Yes', value='1', inplace=True)
 df_survey.replace(to_replace='No', value='0', inplace=True)
 df_survey ['Student'] = pd.read_csv('survey_results_public.csv',
@@ -63,14 +64,25 @@ df_survey ['Student'] = pd.read_csv('survey_results_public.csv',
 #unique_values4 = pd.unique(column_values4)
 X = df_survey['Student']
 X_new = []
-for index, category in X.items():
+unique_categories = {}
+current_index = 0
+for index, value in X.items():
+    category = value
     if (not isinstance(category, str) and math.isnan(category)):
         category = 'No answer'
-    X_new.append([index, category])
+
+    if (category not in unique_categories):
+        current_index += 1
+        unique_categories[category] = current_index
+        X_new.append([current_index, category])
+    X[index] = unique_categories[category]
+
 ohe = OneHotEncoder(categories='auto')
-df_survey['Student'] = ohe.fit_transform(X_new)
+students_categories = ohe.fit_transform(X_new).toarray()
+df_survey['CodeRev'] = df_survey['CodeRev'].astype('int64')
+df_survey['Student'] = X.astype('int64')
 #print (df_survey)
-df_survey_clr = df_survey[['YearsCode','Age1stCode','Age']]
+df_survey_clr = df_survey[['YearsCode','Age1stCode','Age','CodeRev','Student']]
 #df_survey_clr.isna().sum()
 #df_survey_clr.corr()
 Q1 = df_survey_clr.quantile(0.25)
