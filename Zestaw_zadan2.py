@@ -119,3 +119,19 @@ plt.show();
 df_survey_clr_row = df_survey_clr[df_survey_clr.YearsCode > 40].index
 df_survey_clr_fin = df_survey_clr.drop(df_survey_clr_row, axis=0)
 print(df_survey_clr_fin.describe())
+reg4_1 = linear_model.LinearRegression()
+reg4_1_r = reg4_1.fit(df_survey_clr_fin[['Age']], df_survey_clr_fin['YearsCode'])
+#reg4_1_y = df_survey_clr_fin['Age']
+reg4_1_y_p = reg4_1.predict([[60]])
+#mse4_1 = mean_squared_error(reg4_1_y, reg4_1_y_p.tolist())
+print(reg4_1_y_p)
+reg4_2 = linear_model.LinearRegression()
+reg4_2_r = reg4_2.fit(df_survey_clr_fin[['Age','Age1stCode']], df_survey_clr_fin['YearsCode'])
+#reg4_2_y = df_survey_clr_fin['Age']
+reg4_2_y_p = reg4_2.predict(df_survey_clr_fin[['Age','Age1stCode']])
+#mse4_2 = mean_squared_error(reg4_2_y, reg4_2_y_p)
+print(reg4_2_y_p)
+reg4_3 = linear_model.LinearRegression()
+reg4_3_y = reg4_3.fit(df_survey_clr_fin[['Age','Age1stCode','CodeRev','Student']],df_survey_clr_fin['YearsCode'])
+reg4_3_y_p = reg4_3.predict(df_survey_clr_fin[['Age','Age1stCode','CodeRev','Student']])
+print(reg4_3_y_p)
